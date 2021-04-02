@@ -1,0 +1,7 @@
+node_modules
+.idea
+log
+npm-debug.log
+coverage
+.nyc_output
+.env
