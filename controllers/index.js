@@ -1,11 +1,17 @@
-const express = require("express");
+const express = require("express")
 
-const router = express.Router();
+const router = express.Router()
 
-// getSellers(page,perPage)
-router.get("/sellers", (req, res) => {
-    res.send('Hello World!')
-  }
-);
+router.use("/api/sellers", require("./sellers"));
+
+router.get("*", function (req, res) {
+  res.status(404)
+  res.send({
+    status: 404,
+    message: "No service found",
+    type: "request"
+  });
+  console.error("No api rest service found. Request url: " + req.originalUrl);
+});
 
 module.exports = router;
