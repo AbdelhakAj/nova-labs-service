@@ -4,13 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --delay 500ms ./server.js 3000",
+    "start": "nodemon ./server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .js --fix"
   },
   "author": "",
   "license": "ISC",
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "docs/*"
+    ],
+    "delay": 2500
+  },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.10.0",
     "helmet": "^4.4.1",
