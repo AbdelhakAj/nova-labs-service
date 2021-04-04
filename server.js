@@ -2,12 +2,13 @@ const express = require('express')
 const mongoose = require('mongoose')
 const helmet = require("helmet")
 const morgan = require('morgan')
+const cors = require('cors')
 
 const controllers = require('./controllers')
 
 // I didn't use env variables for the sake of simplicity
 const DATABASE_URL = 'mongodb://localhost/'
-const PORT = 3000
+const PORT = 3200
 const HOST = 'localhost'
 
 const app = express()
@@ -18,6 +19,7 @@ db.on('error', (error) => console.error('[index] ' + error))
 db.once('open', () => console.log('[index] Connected to Database'))
 
 app.use(helmet());
+app.use(cors())
 app.use(express.json())
 app.use(morgan(':date[iso] :method :url :status :res[content-length] - :response-time ms'));
 
