@@ -30,6 +30,15 @@ const getSellerById = async (sellerId, date) => {
 }
 
 const addSeller = (fullName) => {
+
+    const found = Seller.find({fullName: fullName}).catch(error => {
+        errorHandler(error, '[sellers] error in services/sellers addSeller')
+    })
+
+    if (found) {
+        return found
+    }
+
     const response = Seller
         .create({ fullName }).catch(error => {
             errorHandler(error, '[sellers] error in services/sellers addSeller')

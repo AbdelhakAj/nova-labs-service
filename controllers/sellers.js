@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator')
 
 const sellers = require("../services/sellers")
 const timeSlots = require("../services/timeSlots")
+const appointmentRequest = require("../services/appointmentRequest")
 
 const router = express.Router()
 
@@ -104,6 +105,75 @@ router.put("/:sellerId/timeslots/:timeSlotsId",
         const { sellerId, timeSlotsId } = req.params
 
         const response = await timeSlots.updateTimeSlotBySeller(sellerId, timeSlotsId, isBooked).catch(error => res.status(500).json({ error }))
+        res.send(response)
+    }
+);
+
+// addRequestToTimeSlot(sellerId, timeSlotsId, body)
+router.post("/:sellerId/timeslots/:timeSlotsId/requests",
+    [
+        check('isAccepted', 'isAccepted should be Boolean')
+            .optional()
+            .isBoolean(),
+        check('requestedBy', 'requestedBy should be a String')
+            .isString()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
+        const { isAccepted, requestedBy } = req.body
+        const { sellerId, timeSlotsId } = req.params
+
+        const response = await appointmentRequest.addRequestToTimeSlot(sellerId, timeSlotsId, { isAccepted, requestedBy }).catch(error => res.status(500).json({ error }))
+        res.send(response)
+    }
+);
+
+// updateRequest(sellerId, timeSlotsId, requestId, body)
+router.put("/:sellerId/timeslots/:timeSlotsId/requests/:requestId",
+    [
+        check('isAccepted', 'isAccepted should be Boolean')
+            .isBoolean()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
+        const { isAccepted } = req.body
+        const { sellerId, timeSlotsId, requestId } = req.params
+
+        const response = await appointmentRequest.updateRequest(sellerId, timeSlotsId, requestId, { isAccepted }).catch(error => res.status(500).json({ error }))
+        res.send(response)
+    }
+);
+
+// getRequestById(sellerId, timeSlotsId, requestId)
+router.get("/:sellerId/timeslots/:timeSlotsId/requests/:requestId",
+    async (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
+        const { sellerId, timeSlotsId, requestId } = req.params
+
+        const response = await appointmentRequest.getRequestById(sellerId, timeSlotsId, requestId).catch(error => res.status(500).json({ error }))
+        res.send(response)
+    }
+);
+
+// getRequests(sellerId, timeSlotsId, requestId)
+router.get("/:sellerId/timeslots/:timeSlotsId/requests",
+    async (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
+        const { sellerId, timeSlotsId } = req.params
+
+        const response = await appointmentRequest.getRequests(sellerId, timeSlotsId).catch(error => res.status(500).json({ error }))
         res.send(response)
     }
 );
